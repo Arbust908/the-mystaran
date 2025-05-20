@@ -27,34 +27,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import type { Database } from '~/database.types'
 
-type Article = Database['public']['Tables']['articles']['Row']
+const { data, error, loading } = await useAsyncData('articles', () => $fetch('/api/article'))
+const articles = computed(() => data.value?.articles || [])
 
-const articles = ref<Article[]>([])
-const loading = ref(true)
-const error = ref<string | null>(null)
-
-const client = useSupabaseClient<Database>()
-
-onMounted(async () => {
-  try {
-    const { data, error: err } = await client
-      .from('articles')
-      .select('*')
-      .order('created_at', { ascending: false })
-    
-    if (err) throw err
-    
-    articles.value = data
-  } catch (e) {
-    error.value = 'Failed to load articles'
-    console.error(e)
-  } finally {
-    loading.value = false
-  }
-})
 </script>
 
 <style scoped>
