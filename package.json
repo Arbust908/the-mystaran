@@ -16,6 +16,7 @@
     "@nuxt/icon": "^1.13.0",
     "@nuxt/image": "^1.10.0",
     "@nuxt/ui": "^3.1.2",
+    "@nuxtjs/supabase": "^1.5.1",
     "eslint": "^9.27.0",
     "nuxt": "^3.17.3",
     "typescript": "^5.8.3",
