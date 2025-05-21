@@ -21,7 +21,7 @@ const posts = computed(() => articles.value?.map(article => ({
   description: article.summary,
   date: article.created_at,
   to: `/post/${article.id}`,
-  image: article.images[0] || 'https://placehold.co/600x400',
+  image: article.images[0] || `https://placehold.co/712x400?text=${article.title}`,
   // Add any additional metadata you want to display
   metadata: [
     ...article.categories.map(c => ({
