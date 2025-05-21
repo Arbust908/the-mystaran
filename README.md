@@ -1,6 +1,24 @@
-# Nuxt Minimal Starter
+# The Mystaran
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+A modern, performant proxy blog for [The Alexandrian](https://thealexandrian.net/), built with Nuxt 3.
+
+## Overview
+
+The Mystaran provides an enhanced reading experience for The Alexandrian's content with:
+
+- 🚀 Better performance through modern web technologies
+- 📱 Mobile-friendly responsive design
+- 👀 Improved readability with proper typography and spacing
+- 🔍 Enhanced content discoverability with categories and tags
+- 💾 Efficient content caching
+
+## Technical Features
+
+- Built with [Nuxt 3](https://nuxt.com) for optimal performance
+- Beautiful UI components from [Nuxt UI](https://ui.nuxt.com)
+- Content storage and API powered by [Supabase](https://supabase.com)
+- Automated content syncing from thealexandrian.net
+- Category and tag organization for better navigation
 
 ## Setup
 
