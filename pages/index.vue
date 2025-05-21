@@ -107,7 +107,7 @@ const posts = computed(() => allArticles.value.map(article => ({
 
 <template>
   <UPage>
-    <UPageHeader title="Blog" description="Articles from the blog" />
+    
 
     <UPageBody>
       <UContainer>
@@ -127,11 +127,10 @@ const posts = computed(() => allArticles.value.map(article => ({
           </UBlogPosts>
 
           <!-- Pagination controls -->
-          <div class="mt-8 flex justify-center" v-if="response?.meta.totalPages > 1">
+          <div v-if="response?.meta.totalPages > 1" class="mt-8 flex justify-center">
             <template v-if="isInfiniteScroll">
               <UButton
                 v-if="response?.meta.hasMore"
-                @click="loadMore"
                 variant="soft"
                 color="primary"
                 :loading="isLoading"
@@ -142,6 +141,7 @@ const posts = computed(() => allArticles.value.map(article => ({
                   }
                 }"
                 class="px-6 py-2 min-w-[160px]"
+                @click="loadMore"
               >
                 {{ isLoading ? 'Loading...' : 'Load More Articles' }}
               </UButton>
