@@ -9,9 +9,10 @@ export default defineNuxtConfig({
     '@nuxt/fonts',
     '@nuxt/icon',
     '@nuxt/image',
-    '@nuxt/ui',
+    '@nuxt/ui-pro',
     '@nuxtjs/supabase'
   ],
+  css: ['~/assets/css/main.css'],
 
   supabase: {
     redirect: false,
