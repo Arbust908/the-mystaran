@@ -21,6 +21,7 @@ const posts = computed(() => articles.value?.map(article => ({
   description: article.summary,
   date: article.created_at,
   to: `/post/${article.id}`,
+  image: article.images[0] || 'https://placehold.co/600x400',
   // Add any additional metadata you want to display
   metadata: [
     ...article.categories.map(c => ({
@@ -37,7 +38,7 @@ const posts = computed(() => articles.value?.map(article => ({
 
 <template>
   <UPage>
-    <UPageHero title="Blog" />
+    <UPageHeader title="Blog" description="Articles from the blog" />
 
     <UPageBody>
       <UContainer>
@@ -50,6 +51,7 @@ const posts = computed(() => articles.value?.map(article => ({
             v-for="(post, index) in posts"
             :key="index"
             v-bind="post"
+            variant="naked"
           />
         </UBlogPosts>
       </UContainer>

@@ -8,6 +8,7 @@ export default defineEventHandler(async (event) => {
       .select(`
         id,
         title,
+        images,
         summary,
         created_at,
         link,
@@ -20,6 +21,7 @@ export default defineEventHandler(async (event) => {
         )
       `)
       .order('created_at', { ascending: false })
+      .limit(12)
 
     if (error) throw error
     return data

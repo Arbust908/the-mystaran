@@ -1,21 +1,24 @@
-// server/utils/scraper.ts
 import { JSDOM } from 'jsdom';
-import { parse } from 'date-fns';
+import { parse, format } from 'date-fns';
+import type { Comment, Article } from './types';
+
+export type RawComment = Omit<Comment, 'id' | 'article_id'>;
+export type RawArticle = Omit<Article, 'id'>;
 
 export async function scrapeHome() {
   const html = await $fetch<string>('https://thealexandrian.net/');
   const dom = new JSDOM(html);
   const document = dom.window.document;
 
-  const promote = Array.from(document.querySelectorAll('#menu a')).map((el) => {
-    const link = el.getAttribute('href') || '';
-    const img = el.querySelector('img')?.getAttribute('src') || '';
-    const text = el.textContent?.trim() || el.querySelector('img')?.getAttribute('alt') || '';
+  const promote = Array.from(document.querySelectorAll('#menu a')).map((el: Element) => {
+    const link = (el as HTMLAnchorElement).getAttribute('href') || '';
+    const img = (el.querySelector('img') as HTMLImageElement)?.getAttribute('src') || '';
+    const text = el.textContent?.trim() || (el.querySelector('img') as HTMLImageElement)?.getAttribute('alt') || '';
     return { link, img, text };
   });
 
-  const links = Array.from(document.querySelectorAll('#third a')).map((el) => {
-    const link = el.getAttribute('href') || '';
+  const links = Array.from(document.querySelectorAll('#third a')).map((el: Element) => {
+    const link = (el as HTMLAnchorElement).getAttribute('href') || '';
     const text = el.textContent?.trim() || '';
     const isInternal = link.includes('thealexandrian.net/');
 
@@ -27,15 +30,6 @@ export async function scrapeHome() {
     links,
   };
 }
-
-export type RawComment = Omit<Comment, 'id'>;
-
-export type RawArticle = Omit<Article, 'id'>;
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type HTMLAnchorElement = any;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type HTMLImageElement = any;
 
 export async function scrapeArticles(url: string): Promise<{ article: RawArticle; comments: RawComment[] }> {
   const html = await $fetch<string>(url);
@@ -57,9 +51,18 @@ export async function scrapeArticles(url: string): Promise<{ article: RawArticle
 
   // 4) Creation date
   const dateEl = entry.querySelector('.itemhead .chronodata');
-  const created_at  = dateEl?.textContent?.trim() || '';
-  const created_at_date = parse(created_at, 'MMMM do, yyyy', new Date());
-  console.info(created_at_date)
+  const created_at_raw = dateEl?.textContent?.trim() || '';
+  let created_at = '';
+  
+  try {
+    const created_at_date = parse(created_at_raw, 'MMMM do, yyyy', new Date());
+    if (created_at_date && !isNaN(created_at_date.getTime())) {
+      created_at = format(created_at_date, 'yyyy-MM-dd');
+    }
+  } catch {
+    console.error('Failed to parse date:', created_at_raw);
+    created_at = new Date().toISOString().split('T')[0]; // Fallback to current date
+  }
 
   // 5) Content & images
   const storyEl = entry.querySelector('.storycontent');
@@ -82,31 +85,46 @@ export async function scrapeArticles(url: string): Promise<{ article: RawArticle
 
   // 7) Comments
   const commentEls = document.querySelectorAll('.commentlist li');
-  const comments: Comment[] = Array.from(commentEls).map(li => {
+  const comments: RawComment[] = Array.from(commentEls).map((li: Element) => {
     const authorEl = li.querySelector('cite');
-    const author = authorEl?.textContent!.trim() || '';
+    const author = authorEl?.textContent?.trim() || '';
     const old_id = Number(li.id.replace('comment-', ''));
 
     // collect all <p> inside this <li> as the comment body
     const paras = Array.from(li.querySelectorAll('p'))
-      .map(p => p.textContent!.trim())
+      .map((p: Element) => p.textContent?.trim() || '')
       .filter(t => t.length > 0);
-    const content= paras;
+    const content = paras;
 
     // find the date link inside the final <small><a>
-    const dateLink  = li.querySelector('div small a');
-    const raw = dateLink?.textContent!.trim() || '';
-    const created_at = parse(raw, "MMMM do, yyyy - h:mm a", new Date()).getTime();
+    const dateLink = li.querySelector('div small a');
+    const raw = dateLink?.textContent?.trim() || '';
+    let comment_created_at = new Date().toISOString().split('T')[0]; // Default fallback
 
-    return { old_id, author, content, created_at };
+    try {
+      const parsed = parse(raw, "MMMM do, yyyy - h:mm a", new Date());
+      if (parsed && !isNaN(parsed.getTime())) {
+        comment_created_at = format(parsed, 'yyyy-MM-dd');
+      }
+    } catch {
+      console.error('Failed to parse comment date:', raw);
+    }
+
+    return { 
+      old_id, 
+      author, 
+      content, 
+      created_at: comment_created_at 
+    };
   });
-  const commentIds = comments.map(c => c.id);
+  const commentIds = comments.map(c => c.old_id);
 
   // 8) Related articles (YARPP thumbnails)
   const related: number[] = Array.from(relatedEls).map(a => {
     // parse old ID from URL, then assign a new UUID
-    const href = (a as HTMLAnchorElement).href;
-    const relatedId = Number(href.match(/wordpress\/(\d+)\//)[1]);
+    const href = (a as HTMLAnchorElement).href || '';
+    const match = href.match(/wordpress\/(\d+)\//);
+    const relatedId = match ? Number(match[1]) : 0;
 
     return relatedId;
   });
@@ -116,7 +134,7 @@ export async function scrapeArticles(url: string): Promise<{ article: RawArticle
     title,
     link,
     images,
-    created_at: created_at_date?.getTime() || created_at,
+    created_at,
     content,
     categories,
     tags,
