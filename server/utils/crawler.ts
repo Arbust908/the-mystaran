@@ -35,7 +35,7 @@ export function normalizeUrl(url: string): string {
     return url; // Return as-is if URL parsing fails
   }
 }
-function delay(ms: number): Promise<void> {
+export function delay(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 const baseDomain = new URL('https://thealexandrian.net/').origin;

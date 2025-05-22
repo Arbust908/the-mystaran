@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
     // Get total count
     const { count, error: countError } = await serverSupabaseServiceRole(event)
       .from('articles')
-      .select('*', { count: 'exact', head: true })
+      .select('id', { count: 'exact', head: true })
 
     if (countError) throw countError
     if (count === null) throw new Error('Failed to get total count')
@@ -32,6 +32,7 @@ export default defineEventHandler(async (event) => {
 
     // Ensure data is never null
     const articles = data || []
+    console.info('Articles:', articles)
     
     return {
       data: articles,

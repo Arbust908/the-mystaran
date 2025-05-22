@@ -15,6 +15,11 @@ export interface PromptTemplate {
   description: string;
 }
 
+export const SYSTEM_PROMPT = {
+  prompt: "When responding to the next user message, output only raw HTML with no Markdown fences or commentary.",
+  description: 'System prompt for AI processing'
+};
+
 /**
  * Article summarization prompt
  * Generates a concise summary of the article content
@@ -38,22 +43,19 @@ Summary:`,
  * Suggests improvements for the article's HTML/CSS styling
  */
 export const BLOG_ENHANCEMENT: PromptTemplate = {
-  prompt: `You are a senior frontend engineer specializing in modern web design. You will receive an HTML blog extract with raw or poorly styled tags and classes. Your task is to enhance this HTML by:
+  prompt: `You are a senior frontend engineer.
 
-Rewriting the HTML structure to be clean and semantically correct.
+TASK: rewrite the HTML below to be clean, semantic and styled with Tailwind.  
 
-Applying appropriate Tailwind CSS utility classes to achieve a modern, readable, and responsive design.
+CONSTRAINTS (read carefully):  
+• **Return raw HTML only.**  
+• **Do NOT wrap the answer in "", <pre>, Markdown fences, or any other wrapper.**  
+• **Do NOT add commentary, explanations, or blank lines.**  
+• **The first character of your reply must be \`<\`.**  
 
-Keeping the content and structure intact, but improving readability and layout.
-
-Using Tailwind best practices: spacing, typography, containers, responsive utilities, etc.
-
-Images should span the full width of the container.
-
+---- ORIGINAL HTML ----
 {articleContent}
-
-
-Output only the improved HTML, no markdown, nothing. Expect us to push the result stright into a <main> tag. Do not include any commentary or explanation. Assume Tailwind CSS is already available in the project.`,
+---- END ORIGINAL HTML ----`,
   description: 'Suggests HTML/CSS improvements for better readability and user experience'
 };
 
@@ -62,27 +64,34 @@ Output only the improved HTML, no markdown, nothing. Expect us to push the resul
  * Suggests improvements for the article title
  */
 export const TITLE_OPTIMIZATION: PromptTemplate = {
-  prompt: `You are a skilled editorial content strategist. You will receive the following blog metadata:
+  prompt: `You are an editorial strategist.
 
-Title: {title}
-
+INPUT
+------
+Original Title: {title}
 Categories: {categories}
-
 Tags: {tags}
-
 Content: {content}
 
-Your task is to:
+TASK
+-----
+Craft a **new** title that:
 
-Read and analyze all provided information to understand the theme and intent.
+• Uses **fewer characters than the original** (hard rule).  
+• Captures the post’s core value in clear, engaging language.  
+• Removes boiler-plate prefixes such as “Ex-RPGNet Review:” or website branding.  
+• Avoids repeating the old title verbatim.
 
-Create a new, concise, and captivating title that summarizes the blog post’s value while optimizing for clarity, SEO, and reader curiosity.
+If your first attempt is not shorter, immediately revise until it is.
 
-Avoid repeating the original title, but preserve its core meaning if relevant.
+OUTPUT  
+------
+Return the new title only, on a single line with no extra text.
 
-Return only the new title with no explanation or extra formatting. It shoudl be shorter than the original title.`,
-  description: 'Suggests optimized titles for better engagement and SEO'
+new title:`,
+  description: 'Generates a shorter, punchier title for better engagement and SEO'
 };
+
 
 /**
  * Helper function to format prompts with variables

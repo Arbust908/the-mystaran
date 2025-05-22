@@ -2,6 +2,8 @@
  * OpenRouter API client with error handling and logging
  */
 
+import { SYSTEM_PROMPT } from "./prompts";
+
 const OPEN_ROUTER_API_URL = 'https://openrouter.ai/api/v1/chat/completions';
 const DEFAULT_MODEL = 'deepseek/deepseek-chat-v3-0324:free';
 
@@ -104,6 +106,10 @@ export async function processArticleWithAI(
   config: OpenRouterConfig
 ) {
   const messages: OpenRouterMessage[] = [
+    {
+      role: 'system',
+      content: SYSTEM_PROMPT.prompt
+    },
     {
       role: 'user',
       content: prompt

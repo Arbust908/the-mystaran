@@ -82,28 +82,41 @@ const loadMore = async () => {
 }
 
 // Transform articles into the format expected by UBlogPost
-const posts = computed(() => allArticles.value.map(article => ({
-  title: article?.ai_title || article.title,
-  description: article?.ai_summary || article.summary,
+const posts = computed(() => allArticles.value.map(article => {
+  let title = article.title
+  if (article.ai_title && article.ai_title.length < title.length) {
+    title = article.ai_title
+  }
+  let description = article.summary || ''
+  if (article.ai_summary && (article.ai_summary.length < description.length || description === '')) {
+    description = article.ai_summary
+  }
+  const imageSrc = article.images[0] || `https://placehold.co/712x400/2563eb/ffffff/png?text=${encodeURIComponent(article.title)}`
+  const articlesCategories = article.categories?.map(c => c.category.name) || []
+  const articlesTags = article.tags?.map(t => t.tag.name) || []
+
+  return {
+  title,
+  description,
   date: article.created_at,
   to: `/post/${article.id}`,
   image: {
-    src: article.images[0] || `https://placehold.co/712x400/2563eb/ffffff/png?text=${encodeURIComponent(article.title)}`,
+    src: imageSrc,
     alt: article.title
   },
-  isAiEnhanced: article.ai_content || article.ai_summary || article.ai_title,
+  isAiEnhanced: Boolean(article.ai_content || article.ai_summary || article.ai_title),
   // Add any additional metadata you want to display
   metadata: [
-    ...article.categories.map(c => ({
-      label: c.category.name,
+    ...articlesCategories.map(cat => ({
+      label: cat,
       color: 'primary'
     })),
-    ...article.tags.map(t => ({
-      label: t.tag.name,
+    ...articlesTags.map(tag => ({
+      label: tag,
       variant: 'outline'
     }))
   ]
-})) ?? [])
+}}) ?? [])
 </script>
 
 <template>

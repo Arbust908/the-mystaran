@@ -38,7 +38,7 @@
             />
           </div>
 
-          <div class="prose prose-lg">
+          <div class="mx-auto prose lg:prose-lg dark:prose-invert prose-img:rounded prose-img:border prose-headings:underline prose-a:text-teal-600">
             <p v-if="article.summary" class="text-xl text-gray-600 mb-8">
               {{ article.summary }}
             </p>

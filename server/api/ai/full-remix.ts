@@ -19,9 +19,11 @@ export default defineEventHandler(async (event) => {
 
   try {
     const articleId = query.id
-    const doTitle = Number(query.title) === 1
-    const doSummary = Number(query.summary) === 1
-    const doContent = Number(query.content) === 1
+    const noAnything = query?.title === undefined && query?.summary === undefined && query?.content === undefined
+
+    const doTitle =  noAnything || Number(query.title) === 1
+    const doSummary = noAnything || Number(query.summary) === 1
+    const doContent = noAnything || Number(query.content) === 1
     console.info('Remixing article:', {
       id: articleId,
       title: doTitle,
@@ -72,7 +74,8 @@ export default defineEventHandler(async (event) => {
       });
       summary = await processArticleWithAI(summaryPrompt, {
         apiKey: config.openRouterKey,
-      });
+      })
+      summary = summary.replaceAll('"', '').replaceAll('*', '');
       toUpdate = { ai_summary: summary }
     }
 
@@ -84,8 +87,11 @@ export default defineEventHandler(async (event) => {
       newTitle = await processArticleWithAI(newTitlePrompt, {
         apiKey: config.openRouterKey,
       });
+      newTitle = newTitle.replaceAll('"', '');
       toUpdate = { ai_title: newTitle }
     }
+
+    console.info('Article enhancement:', toUpdate);
 
     // Save enhanced content back to Supabase
     // Get the Supabase client with proper typing

@@ -8,13 +8,7 @@ export default defineEventHandler(async (event) => {
     const { data, error } = await serverSupabaseServiceRole(event)
       .from('articles')
       .select(`
-        id,
-        title,
-        summary,
-        content,
-        created_at,
-        link,
-        images,
+        *,
         tags: article_tags (
           tag: tags ( id, name, slug )
         ),

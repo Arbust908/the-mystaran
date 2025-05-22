@@ -1,2 +1,4 @@
 @import "tailwindcss";
 @import "@nuxt/ui-pro";
+
+@plugin "@tailwindcss/typography";
