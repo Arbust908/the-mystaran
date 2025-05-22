@@ -1,106 +1,47 @@
 # Active Context
 
 ## Current Focus
-The project is currently focused on enhancing the content management system with new features for better content processing and navigation.
+- Implementing server-side AI processing with OpenRouter integration
+- Setting up task queue system with Supabase
+- Enhancing article content with AI processing
 
 ## Recent Changes
-Initial setup of core system components:
-- Basic article management
-- Link processing system
-- Category and tag foundations
-- Supabase integration
+- Added AI processing pipeline with prompts repository
+- Implemented OpenRouter client with error handling
+- Created API endpoints for article processing
+- Set up task queue system using Supabase
 
 ## Active Decisions
+1. Using OpenRouter with deepseek/deepseek-chat-v3-0324:free model
+2. Implementing queue system in Supabase instead of Redis
+3. Using Nuxt's runtime config for API keys
+4. Keeping database.types.ts untouched - this file is auto-generated and should not be modified
 
-### Content Processing Pipeline
-1. Server-Side AI Integration
-   - Article summarization
-   - HTML/CSS optimization
-   - Title optimization
-   - Content enhancement
+## Technical Considerations
+1. Error Handling:
+   - Comprehensive error handling in OpenRouter client
+   - Task status tracking for failed operations
+   - Detailed logging for debugging
 
-2. Navigation Improvements
-   - Pagination system
-   - Tag/category navigation
-   - Post-to-post navigation
-   - Related content linking
+2. Type Safety:
+   - Strong typing for AI tasks and queue operations
+   - Type-safe prompt templates
+   - Proper error types
 
-### Technical Considerations
-1. AI Processing
-   - Need to determine AI service provider
-   - Define processing queue system
-   - Establish caching strategy
-   - Set up error handling
+3. Performance:
+   - Asynchronous task processing
+   - Task cleanup for completed/failed tasks
+   - Efficient database operations
 
-2. Content Structure
-   - Pagination implementation strategy
-   - Category/tag relationship model
-   - Navigation data structure
-   - Social media metadata format
+## Next Steps
+1. Create migration for ai_tasks table in Supabase
+2. Add task monitoring UI component
+3. Implement task retry mechanism
+4. Add rate limiting for AI requests
+5. Set up monitoring for task queue
 
-## Feature Roadmap
-
-### Immediate Priority
-1. Pagination for Posts
-   - Implement server-side pagination
-   - Add pagination controls
-   - Update article fetching logic
-   - Optimize performance
-
-2. Server-side Article Processing
-   - AI-generated article summaries
-   - Enhanced HTML/CSS generation
-   - Title optimization
-   - Social media integration
-
-### Next Steps
-1. Navigation Enhancements
-   - Tag navigation system
-   - Category navigation system
-   - Post-to-post navigation
-   - Related content suggestions
-
-2. Content Optimization
-   - Better blog HTML/CSS generation
-   - Social and promotional link processing
-   - Source attribution improvements
-   - Metadata enhancement
-
-## Implementation Notes
-
-### Pagination System
-- Consider implementing cursor-based pagination
-- Cache paginated results
-- Include total count handling
-- Support filtering and sorting
-
-### AI Processing
-- Queue long-running processes
-- Implement retry mechanism
-- Store processing results
-- Handle partial failures
-
-### Navigation Structure
-- Design hierarchical categories
-- Implement tag relationships
-- Create navigation cache
-- Optimize query performance
-
-## Current Challenges
-1. Performance Optimization
-   - Pagination impact on load times
-   - AI processing latency
-   - Cache invalidation strategy
-   - Query optimization
-
-2. Content Processing
-   - AI service integration
-   - Processing queue management
-   - Error handling strategy
-   - Result validation
-
-3. Navigation
-   - Complex relationship handling
-   - Cache management
-   - Performance optimization
-   - User experience flow
+## Important Notes
+- database.types.ts is auto-generated and should never be modified directly
+- Use migrations for any database schema changes
+- Keep AI processing tasks atomic and idempotent
+- Maintain comprehensive error logging

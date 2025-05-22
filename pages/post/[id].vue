@@ -8,9 +8,18 @@
 
         <template v-else-if="article">
           <div class="mb-6">
-            <h1 class="text-3xl font-bold mb-2">{{ article.title }}</h1>
+            <h1 class="text-3xl font-bold mb-2">{{ finalTitle }}</h1>
             <p class="text-sm text-gray-500">{{ formatDate(article.created_at) }}</p>
           </div>
+
+          <USwitch
+            v-if="canAiEnhance"
+            v-model="isAiEnhanced"
+            unchecked-icon="i-ph-text-align-left-bold"
+            checked-icon="i-ph-sparkle-fill"
+          />
+          {{  canAiEnhance ? 'Has enhanced content' : 'No enhanced content' }}
+          {{  isAiEnhanced ? 'Enhanced' : 'Original' }}
 
           <div class="flex flex-wrap gap-2 mb-6">
             <UBadge
@@ -29,12 +38,13 @@
             />
           </div>
 
-          <div class="prose prose-lg max-w-none">
+          <div class="prose prose-lg">
             <p v-if="article.summary" class="text-xl text-gray-600 mb-8">
               {{ article.summary }}
             </p>
             
-            <div v-html="article.content" />
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <div v-html="finalContent" />
           </div>
 
           <div class="mt-8 pt-8 border-t">
@@ -75,4 +85,23 @@ const { data: article, error } = await useAsyncData<Article>(
 function formatDate(dateStr: string) {
   return format(new Date(dateStr), 'PPP')
 }
+
+const canAiEnhance = computed(() => {
+  return article.value?.ai_content || article.value?.ai_summary || article.value?.ai_title
+})
+const isAiEnhanced = ref(false)
+
+const finalContent = computed(() => {
+  if (isAiEnhanced.value) {
+    return article.value?.ai_content || article.value?.content
+  }
+  return article.value?.content
+})
+
+const finalTitle = computed(() => {
+  if (isAiEnhanced.value) {
+    return article.value?.ai_title || article.value?.title
+  }
+  return article.value?.title
+})
 </script>

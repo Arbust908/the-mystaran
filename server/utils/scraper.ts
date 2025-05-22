@@ -1,9 +1,8 @@
+// server/utils/scraper.ts
+
 import { JSDOM } from 'jsdom';
 import { parse, format } from 'date-fns';
-import type { Comment, Article } from './types';
-
-export type RawComment = Omit<Comment, 'id' | 'article_id'>;
-export type RawArticle = Omit<Article, 'id'>;
+import type { RawComment, RawArticle } from './types';
 
 export async function scrapeHome() {
   const html = await $fetch<string>('https://thealexandrian.net/');
@@ -129,7 +128,7 @@ export async function scrapeArticles(url: string): Promise<{ article: RawArticle
     return relatedId;
   });
 
-  const article: Omit<Article, 'id'> = {
+  const article: RawArticle = {
     old_id,
     title,
     link,

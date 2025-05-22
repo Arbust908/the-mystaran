@@ -27,6 +27,8 @@
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
+    "@iconify-json/lucide": "^1.2.44",
+    "@iconify-json/ph": "^1.2.2",
     "@types/jsdom": "^21.1.7",
     "supabase": "^2.23.4"
   }

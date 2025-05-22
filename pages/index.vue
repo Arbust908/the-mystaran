@@ -83,14 +83,15 @@ const loadMore = async () => {
 
 // Transform articles into the format expected by UBlogPost
 const posts = computed(() => allArticles.value.map(article => ({
-  title: article.title,
-  description: article.summary,
+  title: article?.ai_title || article.title,
+  description: article?.ai_summary || article.summary,
   date: article.created_at,
   to: `/post/${article.id}`,
   image: {
     src: article.images[0] || `https://placehold.co/712x400/2563eb/ffffff/png?text=${encodeURIComponent(article.title)}`,
     alt: article.title
   },
+  isAiEnhanced: article.ai_content || article.ai_summary || article.ai_title,
   // Add any additional metadata you want to display
   metadata: [
     ...article.categories.map(c => ({
@@ -122,7 +123,7 @@ const posts = computed(() => allArticles.value.map(article => ({
               v-for="(post, index) in posts"
               :key="index"
               v-bind="post"
-              variant="naked"
+              :variant="post.isAiEnhanced ? 'subtle' : 'naked'"
             />
           </UBlogPosts>
 

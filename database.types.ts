@@ -101,6 +101,9 @@ export type Database = {
       }
       articles: {
         Row: {
+          ai_content: string | null
+          ai_summary: string | null
+          ai_title: string | null
           content: string
           created_at: string
           id: string
@@ -111,6 +114,9 @@ export type Database = {
           title: string
         }
         Insert: {
+          ai_content?: string | null
+          ai_summary?: string | null
+          ai_title?: string | null
           content: string
           created_at: string
           id?: string
@@ -121,6 +127,9 @@ export type Database = {
           title: string
         }
         Update: {
+          ai_content?: string | null
+          ai_summary?: string | null
+          ai_title?: string | null
           content?: string
           created_at?: string
           id?: string

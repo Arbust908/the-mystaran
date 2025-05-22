@@ -4,17 +4,21 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
 
   modules: [
+    '@nuxt/ui-pro',
     '@nuxt/content',
     '@nuxt/eslint',
     '@nuxt/fonts',
     '@nuxt/icon',
     '@nuxt/image',
-    '@nuxt/ui-pro',
     '@nuxtjs/supabase'
   ],
+
+  runtimeConfig: {
+    openRouterKey: '',
+  },
   css: ['~/assets/css/main.css'],
 
   supabase: {
     redirect: false,
-  }
+  },
 })

@@ -106,3 +106,16 @@ flowchart TD
    - Separate scraper module
    - Link processing pipeline
    - Content optimization system
+
+
+## Important References
+1. Database Types
+   - database.types.ts is auto-generated
+   - Never modify directly
+   - Use migrations for schema changes
+
+2. UI Components
+   - Always reference nuxt-ui.md
+   - Lists all available components
+   - Documents standard and PRO features
+   - Provides component categories

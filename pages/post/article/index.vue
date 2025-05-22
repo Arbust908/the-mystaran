@@ -18,12 +18,12 @@
           <img :src="article.images[0]" :alt="article.title">
         </div>
         <div class="metadata">
-          <div class="categories" v-if="article.categories?.length">
+          <div v-if="article.categories?.length" class="categories" >
             <span v-for="catId in article.categories" :key="catId">
               {{ categories.find(c => c.id === catId)?.name }}
             </span>
           </div>
-          <div class="tags" v-if="article.tags?.length">
+          <div v-if="article.tags?.length" class="tags">
             <span v-for="tagId in article.tags" :key="tagId">
               {{ tags.find(t => t.id === tagId)?.name }}
             </span>
