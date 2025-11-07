@@ -1,7 +1,6 @@
 import { defineEventHandler, createError, getQuery } from 'h3'
 import { serverSupabaseServiceRole } from '#supabase/server'
 import type { ArticleWithRelations, PaginatedResponse } from '~/server/utils/types'
-import { getArticleQuery } from '~/server/utils/types'
 
 export default defineEventHandler(async (event) => {
   try {
@@ -20,9 +19,12 @@ export default defineEventHandler(async (event) => {
     if (count === null) throw new Error('Failed to get total count')
 
     // Get paginated data
-    const { data, error } = await getArticleQuery(event)
+    const { data, error } = await getArticleQueryWithRelations(event)
       .order('created_at', { ascending: false })
-      .range(offset, offset + limit - 1)
+      .range(offset, offset + limit - 1) as {
+        data: ArticleWithRelations[] | null;
+        error: SupabaseError | null;
+      }
 
     if (error) throw error
 

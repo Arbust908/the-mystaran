@@ -2,7 +2,6 @@ import { ARTICLE_SUMMARY, formatPrompt } from '~/server/utils/prompts';
 import { processArticleWithAI, OpenRouterError } from '~/server/utils/openRouter';
 import { serverSupabaseServiceRole } from '#supabase/server';
 import type { ArticleWithRelations } from '~/server/utils/types';
-import { getArticleQuery } from '~/server/utils/types';
 import type { PostgrestError, SupabaseClient } from '@supabase/supabase-js';
 import { createError } from 'h3';
 

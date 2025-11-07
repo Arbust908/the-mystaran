@@ -1,11 +1,6 @@
-// server/api/ai/enhance.ts
-
 import { BLOG_ENHANCEMENT, formatPrompt } from '~/server/utils/prompts';
 import { processArticleWithAI, OpenRouterError } from '~/server/utils/openRouter';
-import { serverSupabaseServiceRole } from '#supabase/server';
-import { getArticleQuery } from '~/server/utils/types';
-import type { ArticleWithRelations } from '~/server/utils/types';
-import type { PostgrestError, SupabaseClient } from '@supabase/supabase-js';
+import type { ArticleWithRelations, SupabaseError } from '~/server/utils/types';
 import { createError } from 'h3';
 
 export default defineEventHandler(async (event) => {
@@ -33,7 +28,7 @@ export default defineEventHandler(async (event) => {
 
     const { data: article, error: fetchError } = await getArticleQuery(event)
       .eq('id', articleId)
-      .single() as { data: ArticleWithRelations | null, error: PostgrestError | null };
+      .single() as { data: ArticleWithRelations | null, error: SupabaseError | null };
 
     if (fetchError || !article) {
       throw createError({
@@ -94,12 +89,7 @@ export default defineEventHandler(async (event) => {
     console.info('Article enhancement:', toUpdate);
 
     // Save enhanced content back to Supabase
-    // Get the Supabase client with proper typing
-    const supabase = serverSupabaseServiceRole(event) as SupabaseClient;
-    const { data: updatedArticle, error: updateError } = await supabase
-      .from('articles')
-      .update(toUpdate)
-      .eq('id', article.id)
+    const { data: updatedArticle, error: updateError } = await updateArticle(event, article.id, toUpdate)
       .select('*');
 
     if (updateError) throw updateError;

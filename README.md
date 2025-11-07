@@ -11,14 +11,28 @@ The Mystaran provides an enhanced reading experience for The Alexandrian's conte
 - 👀 Improved readability with proper typography and spacing
 - 🔍 Enhanced content discoverability with categories and tags
 - 💾 Efficient content caching
+- 🤖 Optional AI enhancement for content, titles, and summaries
 
 ## Technical Features
 
 - Built with [Nuxt 3](https://nuxt.com) for optimal performance
 - Beautiful UI components from [Nuxt UI](https://ui.nuxt.com)
 - Content storage and API powered by [Supabase](https://supabase.com)
-- Automated content syncing from thealexandrian.net
+- Automated content scraping from thealexandrian.net
 - Category and tag organization for better navigation
+- AI-powered content enhancement via [OpenRouter](https://openrouter.ai)
+
+## Documentation
+
+📚 **[Scraping Architecture Documentation](./SCRAPING_ARCHITECTURE.md)** - Complete guide to the web scraping system
+
+The scraping documentation includes:
+- Architecture diagrams and data flow
+- Database schema and relationships
+- Step-by-step pipeline stages
+- API endpoint documentation
+- Setup and configuration guide
+- Troubleshooting and maintenance
 
 ## Setup
 
