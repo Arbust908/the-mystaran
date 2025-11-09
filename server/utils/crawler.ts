@@ -154,3 +154,16 @@ export async function getAllArticleLinks(links: LinkRecord[]): Promise<LinkRecor
 export async function getAllTagsLinks(links: LinkRecord[]): Promise<LinkRecord[]> {}
 
 export async function getAllCategoriesLinks(links: LinkRecord[]): Promise<LinkRecord[]> {}
+
+export async function exportLinksToJson(links: LinkRecord[], filePath: string): Promise<void> {
+  const fs = await import('node:fs/promises');
+  const path = await import('node:path');
+
+  const dir = path.dirname(filePath);
+  await fs.mkdir(dir, { recursive: true });
+
+  const jsonContent = JSON.stringify(links, null, 2);
+  await fs.writeFile(filePath, jsonContent, 'utf-8');
+
+  console.info(`Exported ${links.length} links to ${filePath}`);
+}
